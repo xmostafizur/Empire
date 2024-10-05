@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X Empire Calculation 🧮</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a2a48; /* ডার্ক ব্লু ব্যাকগ্রাউন্ড */
+            color: #e0e0e0; /* হালকা ধূসর ফন্ট রঙ */
+            margin: 50px;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #ffd700; /* হলুদ রঙ */
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 2px solid #3b4a69; /* হালকা ডার্ক ব্লু বর্ডার */
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            background-color: #2f2f2f; /* ডার্ক বেগুনি-কালো মিশ্রণ */
+        }
+        input[type="number"], input[type="text"] {
+            width: 100px;
+            padding: 10px;
+            margin: 0 10px;
+            border: 2px solid #3b4a69; /* হালকা ডার্ক ব্লু বর্ডার */
+            background-color: #1f1f1f; /* কালো ইনপুট ব্যাকগ্রাউন্ড */
+            color: #fff; /* সাদা ফন্ট */
+            border-radius: 5px;
+        }
+        input[type="text"] {
+            width: 70px; /* Short বক্সের চওড়া */
+        }
+        input[type="text"]::placeholder {
+            color: #bbb; /* Placeholder টেক্সট হালকা ধূসর */
+        }
+        .result-box {
+            margin-left: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #28a745; /* সবুজ রঙে "Result" */
+        }
+        .result-box span {
+            color: #ffd700; /* হলুদ রঙে শুধুমাত্র সংখ্যা */
+        }
+    </style>
+</head>
+<body>
+
+<div class="title">Mostafizur Empire🌟</div>
+
+<script>
+    function createCalculator(index) {
+        return `
+            <div class="container">
+                <input type="text" id="short${index}" placeholder="Short" oninput="updateCoin(${index})">
+                <input type="number" id="coin${index}" placeholder="Coin" readonly>
+                <input type="number" id="perHour${index}" placeholder="Per Hour" oninput="calculateDivision(${index})">
+                <div class="result-box">
+                    Result: <span id="result${index}">0.00</span>
+                </div>
+            </div>
+        `;
+    }
+
+    for (let i = 1; i <= 20; i++) {
+        document.body.innerHTML += createCalculator(i);
+    }
+
+    function updateCoin(index) {
+        var shortValue = document.getElementById("short" + index).value.toLowerCase();
+        var coinInput = document.getElementById("coin" + index);
+
+        // Only allow 'k' or 'm' in the Short box
+        if (!/^(\d+(\.\d+)?)([k|m]?)$/.test(shortValue)) {
+            coinInput.value = ''; // Clear coin if invalid
+            return;
+        }
+
+        // Convert the Short value to coin value
+        var numberPart = parseFloat(shortValue) || 0;
+        var convertedValue = 0;
+
+        if (shortValue.endsWith('k')) {
+            convertedValue = numberPart * 1000;
+        } else if (shortValue.endsWith('m')) {
+            convertedValue = numberPart * 1000000;
+        } else {
+            convertedValue = numberPart; // No suffix means just the number
+        }
+
+        // Update coin input field
+        coinInput.value = convertedValue;
+
+        // Calculate the result based on the updated coin value
+        calculateDivision(index);
+    }
+
+    function calculateDivision(index) {
+        var coin = parseFloat(document.getElementById("coin" + index).value) || 0;
+        var perHour = parseFloat(document.getElementById("perHour" + index).value) || 1; // Default perHour to 1 to avoid division by 0
+        
+        if (perHour == 0) {
+            document.getElementById("result" + index).innerText = "Error";
+            return;
+        }
+
+        var result = coin / perHour;
+        document.getElementById("result" + index).innerText = result.toFixed(2); // ২ দশমিক সংখ্যা রাখুন
+    }
+</script>
+
+</body>
+</html>
